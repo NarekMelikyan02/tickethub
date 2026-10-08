@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 public class MoneyTests
 {
 
-    Money moneyUSD;
+    private Money moneyUSD;
 
-    Money moneyEUR;
+    private Money moneyEUR;
 
     @BeforeEach
     void setUp()

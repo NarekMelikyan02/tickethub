@@ -13,6 +13,5 @@ public record SeatedRow(
     public SeatedRow
     {
         Objects.requireNonNull(label);
-
     }
 }

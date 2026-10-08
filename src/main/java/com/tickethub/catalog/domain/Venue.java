@@ -1,8 +1,9 @@
 package com.tickethub.catalog.domain;
 
+import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import com.tickethub.exception.IllegalOperationException;
@@ -12,8 +13,8 @@ public record Venue(
     @Nonnull Id id,
     @Nonnull String city,
     @Nonnull String name,
-    @Nonnull TimeZone timeZone,
-    @Nonnull List<Section.Id> sections
+    @Nonnull ZonedDateTime timeZone,
+    @Nonnull List<Section> sections
 )
 {
 
@@ -26,6 +27,12 @@ public record Venue(
         if (sections.isEmpty())
         {
             throw new IllegalOperationException("Venue must have at least one section");
+        }
+
+        var sectionsWithUniqueLable = new HashSet<>();
+        if (!sections.stream().map(s -> s.name().toLowerCase()).allMatch(sectionsWithUniqueLable::add))
+        {
+            throw new IllegalOperationException("All section names must be unique ignoring case");
         }
     }
 
