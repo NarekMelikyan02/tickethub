@@ -22,9 +22,8 @@ public class VenueTests
     void shouldCorrectlyConstructVenueObject()
     {
         //given
-        var sectionId = Section.Id.generate();
         var section = new GeneralAdmission(
-            sectionId,
+            Section.Id.generate(),
             "Standing Bar Zone",
             25
         );
@@ -64,6 +63,47 @@ public class VenueTests
     }
 
     @Test
+    void shouldThrowWhenSectionHasDuplicateName()
+    {
+        //given
+        var seatedSection = new SeatedSection(
+            Section.Id.generate(),
+            "Hall 1",
+            List.of(
+                new SeatedRow("A", 14),
+                new SeatedRow("B", 38)
+            )
+        );
+
+        var dupeSeatedSection = new SeatedSection(
+            Section.Id.generate(),
+            "Hall 1",
+            List.of(
+                new SeatedRow("A", 14)
+            )
+        );
+
+        //then
+        assertThatThrownBy(() ->
+            new Venue(
+                venueId,
+                "Yerevan",
+                "Karen Demirchyan Hall",
+                ZonedDateTime.of(
+                    LocalDateTime.of(
+                        2026,
+                        8,
+                        20,
+                        14,
+                        0
+                    ),
+                    ZoneId.of("Asia/Yerevan")
+                ),
+                List.of(dupeSeatedSection, seatedSection)
+            )).isExactlyInstanceOf(IllegalOperationException.class);
+    }
+
+    @Test
     void shouldThrowWhenNullValuesDuringVenueConstruction()
     {
         //then
@@ -75,6 +115,50 @@ public class VenueTests
                 null
             )
         ).isExactlyInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void shouldCorrectlyCalculateTotalCapacity()
+    {
+
+        //given
+        var genSection = new GeneralAdmission(
+            Section.Id.generate(),
+            "Standing Bar Zone",
+            25
+        );
+
+        var seatedSection = new SeatedSection(
+            Section.Id.generate(),
+            "Hall 1",
+            List.of(
+                new SeatedRow("A", 14),
+                new SeatedRow("B", 38)
+            )
+        );
+
+        venue = new Venue(
+            venueId,
+            "Yerevan",
+            "Karen Demirchyan Hall",
+            ZonedDateTime.of(
+                LocalDateTime.of(
+                    2026,
+                    8,
+                    20,
+                    14,
+                    0
+                ),
+                ZoneId.of("Asia/Yerevan")
+            ),
+            List.of(genSection, seatedSection)
+        );
+
+        //when
+        var totalCapacity = venue.totalCapacity();
+
+        //then
+        assertThat(totalCapacity).isEqualTo(77);
     }
 
     @Test

@@ -39,6 +39,14 @@ public record SeatedSection(
     }
 
     @Override
+    public int capacity()
+    {
+        return this.rows.stream()
+            .mapToInt(SeatedRow::seatCount)
+            .sum();
+    }
+
+    @Override
     public @Nonnull SectionType type()
     {
         return SectionType.SEATED;

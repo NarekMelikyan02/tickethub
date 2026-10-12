@@ -16,6 +16,8 @@ public sealed interface Section permits SeatedSection, GeneralAdmission
     @Nonnull
     SectionType type();
 
+    int capacity();
+
     record Id(@Nonnull UUID id)
     {
 

@@ -29,11 +29,19 @@ public record Venue(
             throw new IllegalOperationException("Venue must have at least one section");
         }
 
-        var sectionsWithUniqueLable = new HashSet<>();
-        if (!sections.stream().map(s -> s.name().toLowerCase()).allMatch(sectionsWithUniqueLable::add))
+        var sectionsWithUniqueLabel = new HashSet<>();
+        if (!sections.stream().map(s -> s.name().toLowerCase()).allMatch(sectionsWithUniqueLabel::add))
         {
             throw new IllegalOperationException("All section names must be unique ignoring case");
         }
+    }
+
+    @Nonnull
+    public Integer totalCapacity()
+    {
+        return this.sections.stream()
+            .mapToInt(Section::capacity)
+            .sum();
     }
 
     public record Id(@Nonnull UUID id)
